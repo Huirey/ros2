@@ -19,9 +19,10 @@ class ImageSubscriber(Node):
     def __init__(self, name):
         super().__init__(name)                                # ROS2节点父类初始化
         self.sub = self.create_subscription(
-            Image, 'image_raw', self.listener_callback, 10)   # 创建订阅者对象（消息类型、话题名、订阅者回调函数、队列长度）
+            Image, 'image_raw', self.listener_callback, 1)   # 创建订阅者对象（消息类型、话题名、订阅者回调函数、队列长度）
         self.cv_bridge = CvBridge()                           # 创建一个图像转换对象，用于OpenCV图像与ROS的图像消息的互相转换
 
+        self.pre_image_id = -1
     def object_detect(self, image):
         hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)      # 图像从BGR颜色模型转换为HSV模型
         mask_red = cv2.inRange(hsv_img, lower_red, upper_red) # 图像二值化
@@ -60,8 +61,13 @@ class ImageSubscriber(Node):
         cv2.waitKey(10)        
 
     def listener_callback(self, data):
-        self.get_logger().info('Receiving video frame')     # 输出日志信息，提示已进入回调函数
+        # self.get_logger().info('Receiving video frame')     # 输出日志信息，提示已进入回调函数
         image = self.cv_bridge.imgmsg_to_cv2(data, 'bgr8')  # 将ROS的图像消息转化成OpenCV图像
+
+        past_image_num = data.header.stamp.sec - self.pre_image_id
+        self.pre_image_id = data.header.stamp.sec
+        self.get_logger().info(f'当前接收到id{data.header.stamp.sec},与上一次差距{past_image_num}')
+
         self.gray(image)
 
 
