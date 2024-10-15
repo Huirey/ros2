@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'cam_pub = pkg04_image_process.cam_pub:main',
-            # 'cam_sub = pkg04_image_process.cam_sub:main',
+            'cam_sub = pkg04_image_process.cam_sub:main',
         ],
     },
 )
