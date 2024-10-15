@@ -1,0 +1,99 @@
+<robot name="mycar">
+<!-- 添加footprint -->
+    <link name="base_footprint">
+        <visual>
+            <geometry>
+                <sphere radius="0.001" />
+            </geometry>
+        </visual>
+    </link>
+<!-- 添加底盘 -->
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <cylinder radius="0.1" length="0.08" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="base_link_color">
+                <color rgba="1.0 0.5 0.2 0.5"/>
+            </material>
+        </visual>
+    </link>
+<!-- 连接底盘和footprint -->
+    <joint name="link2footprint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 0.055" rpy="0 0 0" />
+    </joint>
+<!-- 添加驱动轮 -->
+    <link name="left_wheel">
+        <visual>
+            <geometry>
+                <cylinder radius="0.0325" length="0.015" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <material name="wheel_color">
+                <color rgba="0 0 0 0.5"/>
+            </material>
+        </visual>
+    </link>
+    <link name="right_wheel">
+        <visual>
+            <geometry>
+                <cylinder radius="0.0325" length="0.015" />
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <material name="wheel_color">
+                <color rgba="0 0 0 0.5"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="left2link" type="continuous">
+        <parent link="base_link"/>
+        <child link="right_wheel"/>
+        <origin xyz="0 0.1 -0.0225" rpy="0 0 0" />
+        <axis xyz="0 1 0"/>
+    </joint>  
+    <joint name="right2link" type="continuous">
+        <parent link="base_link"/>
+        <child link="left_wheel"/>
+        <origin xyz="0 -0.1 -0.0225" rpy="0 0 0" />
+        <axis xyz="0 1 0"/>
+    </joint>  
+<!-- 添加万向轮 -->
+    <link name="left_support_wheel">
+        <visual>
+            <geometry>
+                <sphere radius="0.0075"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <material name="wheel_color">
+                <color rgba="0 0 0 0.5"/>
+            </material>
+        </visual>
+    </link>
+    <link name="right_support_wheel">
+        <visual>
+            <geometry>
+                <sphere radius="0.0075"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+            <material name="wheel_color">
+                <color rgba="0 0 0 0.5"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="right_s2link" type="continuous">
+        <parent link="base_link"/>
+        <child link="left_support_wheel"/>
+        <!-- 0.08/2+0.75/2=0.0475 -->
+        <origin xyz="-0.0925 0 -0.0475" rpy="0 0 0" />
+        <axis xyz="1 1 1"/>
+    </joint>  
+    <joint name="left_s2link" type="continuous">
+        <parent link="base_link"/>
+        <child link="right_support_wheel"/>
+        <origin xyz="0.0925 0 -0.0475" rpy="0 0 0" />
+        <axis xyz="1 1 1"/>
+    </joint>
+</robot>
